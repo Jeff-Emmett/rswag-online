@@ -1,7 +1,7 @@
 ---
 id: TASK-7
 title: Set up auto-deploy webhook for rSwag
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-02-18 19:51'
 labels: []

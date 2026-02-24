@@ -86,7 +86,7 @@ async def get_design_image(slug: str):
 
 
 @router.get("/{slug}/mockup")
-async def get_design_mockup(slug: str, type: str = "shirt"):
+async def get_design_mockup(slug: str, type: str = "shirt", fresh: bool = False):
     """Serve the design composited onto a product mockup template.
 
     For Printful-provider designs: fetches photorealistic mockup from
@@ -95,9 +95,10 @@ async def get_design_mockup(slug: str, type: str = "shirt"):
 
     Query params:
         type: Product type — "shirt", "sticker", or "print" (default: shirt)
+        fresh: If true, bypass cache and regenerate mockup
     """
     cache_key = (slug, type)
-    if cache_key in _mockup_cache:
+    if not fresh and cache_key in _mockup_cache:
         return StreamingResponse(
             io.BytesIO(_mockup_cache[cache_key]),
             media_type="image/png",
@@ -225,10 +226,11 @@ async def _pillow_mockup(slug: str, type: str) -> StreamingResponse:
     blend_mode = template_config.get("blend", "paste")
 
     if blend_mode == "screen":
-        # Screen blend: makes light designs appear printed on dark fabric.
-        # Formula: 1 - (1-base)(1-overlay). Preserves fabric texture.
+        # Screen blend for light designs on dark fabric.
+        # We use a brightness-based mask so only non-dark pixels from
+        # the design show through, preventing a visible dark rectangle
+        # when the design has its own dark background.
         design_rgb = design_resized.convert("RGB")
-        alpha = design_resized.split()[3] if design_resized.mode == "RGBA" else None
 
         # Extract the region under the design
         region = canvas.crop((dx, dy, dx + dw, dy + dh))
@@ -236,14 +238,15 @@ async def _pillow_mockup(slug: str, type: str) -> StreamingResponse:
         # Screen blend the design onto the fabric region
         blended = ImageChops.screen(region, design_rgb)
 
-        # If design has alpha, composite using it as mask
-        if alpha:
-            # Convert alpha to 3-channel for masking
-            region_arr = region.copy()
-            blended_with_alpha = Image.composite(blended, region_arr, alpha)
-            canvas.paste(blended_with_alpha, (dx, dy))
-        else:
-            canvas.paste(blended, (dx, dy))
+        # Create a luminance mask from the design — only bright pixels blend in.
+        # This prevents the design's dark background from creating a visible box.
+        lum = design_rgb.convert("L")
+        # Boost contrast so only clearly visible parts of the design show
+        lum = lum.point(lambda p: min(255, int(p * 1.5)))
+
+        # Composite: use luminance as mask (bright pixels = show blended, dark = keep original)
+        result = Image.composite(blended, region, lum)
+        canvas.paste(result, (dx, dy))
     else:
         # Direct paste — for stickers/prints where design goes on a light surface
         if design_resized.mode == "RGBA":

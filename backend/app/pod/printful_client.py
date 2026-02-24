@@ -33,10 +33,13 @@ class PrintfulClient:
 
     @property
     def _headers(self) -> dict[str, str]:
-        return {
+        headers = {
             "Authorization": f"Bearer {self.api_token}",
             "Content-Type": "application/json",
         }
+        if settings.printful_store_id:
+            headers["X-PF-Store-Id"] = settings.printful_store_id
+        return headers
 
     # ── Catalog ──
 

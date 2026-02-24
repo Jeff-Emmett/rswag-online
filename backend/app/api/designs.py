@@ -18,19 +18,23 @@ router = APIRouter()
 design_service = DesignService()
 settings = get_settings()
 
-# Mockup template configs: product_type → (template path, design bounding box)
+# Mockup template configs: product_type → (template path, design bounding box, blend mode)
+# Coordinates are for 1024x1024 photorealistic templates
 MOCKUP_TEMPLATES = {
     "shirt": {
         "template": "shirt-template.png",
-        "design_box": (275, 300, 250, 250),  # x, y, w, h on 800x800 canvas
+        "design_box": (330, 310, 370, 370),  # x, y, w, h — chest area on black tee
+        "blend": "screen",  # screen blend for light designs on dark fabric
     },
     "sticker": {
         "template": "sticker-template.png",
-        "design_box": (130, 130, 540, 540),
+        "design_box": (270, 210, 470, 530),  # inside the white sticker area
+        "blend": "paste",
     },
     "print": {
         "template": "print-template.png",
-        "design_box": (160, 160, 480, 480),
+        "design_box": (225, 225, 575, 500),  # inside the black frame
+        "blend": "paste",
     },
 }
 
@@ -182,7 +186,9 @@ async def _get_printful_mockup(slug: str, product) -> bytes | None:
 
 
 async def _pillow_mockup(slug: str, type: str) -> StreamingResponse:
-    """Generate mockup using Pillow compositing with local templates."""
+    """Generate photorealistic mockup using Pillow compositing."""
+    from PIL import ImageChops
+
     template_config = MOCKUP_TEMPLATES.get(type)
     if not template_config:
         raise HTTPException(status_code=400, detail=f"Unknown product type: {type}")
@@ -199,10 +205,12 @@ async def _pillow_mockup(slug: str, type: str) -> StreamingResponse:
     if not template_path.exists():
         raise HTTPException(status_code=404, detail="Mockup template not found")
 
-    # Composite design onto product template
-    canvas = Image.new("RGBA", (800, 800), (0, 0, 0, 0))
+    # Load images
+    template_img = Image.open(str(template_path)).convert("RGB")
     design_img = Image.open(image_path).convert("RGBA")
-    template_img = Image.open(str(template_path)).convert("RGBA")
+
+    # Start with the photorealistic template as the base
+    canvas = template_img.copy()
 
     # Scale design to fit bounding box while maintaining aspect ratio
     bx, by, bw, bh = template_config["design_box"]
@@ -214,11 +222,36 @@ async def _pillow_mockup(slug: str, type: str) -> StreamingResponse:
 
     design_resized = design_img.resize((dw, dh), Image.LANCZOS)
 
-    # Draw design first (underneath), then template on top
-    canvas.paste(design_resized, (dx, dy), design_resized)
-    canvas.paste(template_img, (0, 0), template_img)
+    blend_mode = template_config.get("blend", "paste")
 
-    # Export to PNG bytes
+    if blend_mode == "screen":
+        # Screen blend: makes light designs appear printed on dark fabric.
+        # Formula: 1 - (1-base)(1-overlay). Preserves fabric texture.
+        design_rgb = design_resized.convert("RGB")
+        alpha = design_resized.split()[3] if design_resized.mode == "RGBA" else None
+
+        # Extract the region under the design
+        region = canvas.crop((dx, dy, dx + dw, dy + dh))
+
+        # Screen blend the design onto the fabric region
+        blended = ImageChops.screen(region, design_rgb)
+
+        # If design has alpha, composite using it as mask
+        if alpha:
+            # Convert alpha to 3-channel for masking
+            region_arr = region.copy()
+            blended_with_alpha = Image.composite(blended, region_arr, alpha)
+            canvas.paste(blended_with_alpha, (dx, dy))
+        else:
+            canvas.paste(blended, (dx, dy))
+    else:
+        # Direct paste — for stickers/prints where design goes on a light surface
+        if design_resized.mode == "RGBA":
+            canvas.paste(design_resized, (dx, dy), design_resized)
+        else:
+            canvas.paste(design_resized, (dx, dy))
+
+    # Export to high-quality PNG
     buf = io.BytesIO()
     canvas.save(buf, format="PNG", optimize=True)
     png_bytes = buf.getvalue()

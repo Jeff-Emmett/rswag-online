@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     # POD Providers
     prodigi_api_key: str = ""
     printful_api_token: str = ""
+    printful_store_id: str = ""
     pod_sandbox_mode: bool = True
 
     # Flow Service (TBFF revenue split → bonding curve)

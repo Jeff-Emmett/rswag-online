@@ -84,7 +84,10 @@ export default async function HomePage() {
       </div>
 
       <div className="mt-24">
-        <h2 className="text-2xl font-bold text-center mb-12">Featured Products</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Featured Products</h2>
+        <p className="text-center text-muted-foreground mb-12">
+          Print-on-demand — fulfilled by Printful, shipped worldwide.
+        </p>
         {products.length === 0 ? (
           <p className="text-center text-muted-foreground">
             No products available yet. Check back soon!
@@ -95,22 +98,40 @@ export default async function HomePage() {
               <Link
                 key={product.slug}
                 href={`/products/${product.slug}`}
-                className="group"
+                className="group block"
               >
-                <div className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="relative overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                   <div className="aspect-square bg-muted relative overflow-hidden">
                     <img
-                      src={`${API_URL}/designs/${product.slug}/image`}
+                      src={`${API_URL}/designs/${product.slug}/mockup?type=${
+                        product.product_type.includes("shirt") || product.product_type.includes("tee") ? "shirt"
+                        : product.product_type.includes("sticker") ? "sticker"
+                        : product.product_type.includes("print") ? "print"
+                        : "shirt"
+                      }`}
                       alt={product.name}
-                      className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
                     />
+                    <div className="absolute top-3 left-3">
+                      <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white capitalize">
+                        {product.product_type}
+                      </span>
+                    </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground capitalize">
-                      {product.product_type}
+                  <div className="p-5">
+                    <h3 className="font-semibold text-lg leading-tight group-hover:text-primary transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
+                      {product.description}
                     </p>
-                    <p className="font-bold mt-2">${product.base_price.toFixed(2)}</p>
+                    <div className="mt-4 flex items-center justify-between">
+                      <span className="text-xl font-bold">${product.base_price.toFixed(2)}</span>
+                      <span className="text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                        View Details →
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Link>

@@ -6,36 +6,40 @@ export interface MockupConfig {
   label: string;
   productType: string;
   price: number;
+  blend?: "screen" | "normal";
 }
 
 export const MOCKUP_CONFIGS: MockupConfig[] = [
   {
     template: "/mockups/shirt-template.png",
-    designArea: { x: 275, y: 300, width: 250, height: 250 },
+    designArea: { x: 330, y: 310, width: 370, height: 370 },
     label: "T-Shirt",
     productType: "shirt",
     price: 29.99,
+    blend: "screen",
   },
   {
     template: "/mockups/sticker-template.png",
-    designArea: { x: 130, y: 130, width: 540, height: 540 },
+    designArea: { x: 270, y: 210, width: 470, height: 530 },
     label: "Sticker",
     productType: "sticker",
     price: 3.50,
+    blend: "normal",
   },
   {
     template: "/mockups/print-template.png",
-    designArea: { x: 160, y: 160, width: 480, height: 480 },
+    designArea: { x: 225, y: 225, width: 575, height: 500 },
     label: "Art Print",
     productType: "print",
     price: 12.99,
+    blend: "normal",
   },
 ];
 
 /**
- * Composite a design image onto a product template using Canvas API.
- * Draws the design into the bounding box first, then overlays the template
- * so transparent regions in the template show the design through.
+ * Composite a design image onto a photorealistic product template.
+ * For shirts: uses screen blending so designs look printed on fabric.
+ * For stickers/prints: direct paste into the blank area.
  */
 export function generateMockup(
   designDataUrl: string,
@@ -43,8 +47,8 @@ export function generateMockup(
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     const canvas = document.createElement("canvas");
-    canvas.width = 800;
-    canvas.height = 800;
+    canvas.width = 1024;
+    canvas.height = 1024;
     const ctx = canvas.getContext("2d");
     if (!ctx) return reject(new Error("Canvas not supported"));
 
@@ -59,7 +63,9 @@ export function generateMockup(
       loaded++;
       if (loaded < 2) return;
 
-      // Draw design first (underneath template)
+      // Draw photorealistic template as base
+      ctx.drawImage(templateImg, 0, 0, 1024, 1024);
+
       const { x, y, width, height } = config.designArea;
 
       // Maintain aspect ratio within the bounding box
@@ -69,10 +75,15 @@ export function generateMockup(
       const dx = x + (width - dw) / 2;
       const dy = y + (height - dh) / 2;
 
+      if (config.blend === "screen") {
+        // Screen blend: makes light colors on dark fabric look printed
+        ctx.globalCompositeOperation = "screen";
+      }
+
       ctx.drawImage(designImg, dx, dy, dw, dh);
 
-      // Draw template on top (transparent areas show design through)
-      ctx.drawImage(templateImg, 0, 0, 800, 800);
+      // Reset composite operation
+      ctx.globalCompositeOperation = "source-over";
 
       resolve(canvas.toDataURL("image/png"));
     };

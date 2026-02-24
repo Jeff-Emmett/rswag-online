@@ -12,7 +12,7 @@ export interface MockupConfig {
 export const MOCKUP_CONFIGS: MockupConfig[] = [
   {
     template: "/mockups/shirt-template.png",
-    designArea: { x: 330, y: 310, width: 370, height: 370 },
+    designArea: { x: 262, y: 230, width: 500, height: 450 },
     label: "T-Shirt",
     productType: "shirt",
     price: 29.99,

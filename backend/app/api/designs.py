@@ -23,7 +23,7 @@ settings = get_settings()
 MOCKUP_TEMPLATES = {
     "shirt": {
         "template": "shirt-template.png",
-        "design_box": (330, 310, 370, 370),  # x, y, w, h — chest area on black tee
+        "design_box": (262, 230, 500, 450),  # x, y, w, h — chest area on black tee
         "blend": "screen",  # screen blend for light designs on dark fabric
     },
     "sticker": {

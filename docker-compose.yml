@@ -36,22 +36,16 @@ services:
     container_name: rswag-backend
     restart: unless-stopped
     environment:
+      - INFISICAL_CLIENT_ID=${INFISICAL_CLIENT_ID}
+      - INFISICAL_CLIENT_SECRET=${INFISICAL_CLIENT_SECRET}
+      - INFISICAL_PROJECT_SLUG=rswag
+      - INFISICAL_ENV=prod
+      - INFISICAL_URL=http://infisical:8080
       - DATABASE_URL=postgresql://rswag:${DB_PASSWORD:-devpassword}@db:5432/rswag
       - REDIS_URL=redis://redis:6379
-      - MOLLIE_API_KEY=${MOLLIE_API_KEY}
-      - PRODIGI_API_KEY=${PRODIGI_API_KEY}
-      - PRINTFUL_API_TOKEN=${PRINTFUL_API_TOKEN}
-      - POD_SANDBOX_MODE=${POD_SANDBOX_MODE:-true}
-      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
-      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000}
       - DESIGNS_PATH=/app/designs
       - CONFIG_PATH=/app/config
       - SPACES_PATH=/app/spaces
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - FLOW_SERVICE_URL=${FLOW_SERVICE_URL:-}
-      - FLOW_ID=${FLOW_ID:-}
-      - FLOW_FUNNEL_ID=${FLOW_FUNNEL_ID:-}
-      - FLOW_REVENUE_SPLIT=${FLOW_REVENUE_SPLIT:-0.5}
     volumes:
       - ./designs:/app/designs
       - ./config:/app/config:ro

@@ -23,4 +23,4 @@ products:
     variants: [S, M, L, XL, 2XL, 3XL]
     retail_price: 29.99
 
-status: draft
+status: active

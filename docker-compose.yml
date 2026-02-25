@@ -46,6 +46,8 @@ services:
       - DESIGNS_PATH=/app/designs
       - CONFIG_PATH=/app/config
       - SPACES_PATH=/app/spaces
+      - PRINTFUL_STORE_ID=${PRINTFUL_STORE_ID:-}
+      - PUBLIC_URL=${PUBLIC_URL:-https://rswag.online}
     volumes:
       - ./designs:/app/designs
       - ./config:/app/config:ro

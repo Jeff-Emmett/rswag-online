@@ -62,4 +62,29 @@ else
   echo "[infisical] Starting with existing env vars"
 fi
 
+# Fetch SMTP password from claude-ops /mail if not already set
+if [ -z "$SMTP_PASSWORD" ]; then
+  SMTP_PWD=$(python3 -c "
+import urllib.request, json, os, sys
+base = os.environ.get('INFISICAL_URL', 'http://infisical:8080')
+try:
+    data = json.dumps({'clientId': os.environ['INFISICAL_CLIENT_ID'], 'clientSecret': os.environ['INFISICAL_CLIENT_SECRET']}).encode()
+    req = urllib.request.Request(f'{base}/api/v1/auth/universal-auth/login', data=data, headers={'Content-Type': 'application/json'})
+    token = json.loads(urllib.request.urlopen(req).read()).get('accessToken','')
+    req = urllib.request.Request(f'{base}/api/v3/secrets/raw?workspaceSlug=claude-ops&environment=prod&secretPath=/mail')
+    req.add_header('Authorization', f'Bearer {token}')
+    secrets = json.loads(urllib.request.urlopen(req).read())
+    for s in secrets.get('secrets',[]):
+        if s['secretKey'] == 'RSWAG_SMTP_PASSWORD':
+            print(s['secretValue'])
+            break
+except Exception as e:
+    print(f'[smtp] Could not fetch password: {e}', file=sys.stderr)
+" 2>&1) || true
+  if [ -n "$SMTP_PWD" ] && echo "$SMTP_PWD" | grep -qv '^\['; then
+    export SMTP_PASSWORD="$SMTP_PWD"
+    echo "[infisical] Fetched SMTP password from claude-ops/mail"
+  fi
+fi
+
 exec "$@"

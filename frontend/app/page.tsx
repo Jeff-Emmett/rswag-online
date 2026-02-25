@@ -80,10 +80,11 @@ export default async function HomePage() {
               name
             ) : (
               <>
-                Community Merch,
+                Get Your Community Noticed
                 <br />
+                with{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                  Revenue for Your Community
+                  (you)rMerch
                 </span>
               </>
             )}
@@ -95,12 +96,10 @@ export default async function HomePage() {
               "Custom merchandise for your community."
             ) : (
               <>
-                Locally produced merch that{" "}
-                <strong className="text-foreground">
-                  feeds revenue directly into your community
-                </strong>
-                . Design, upload, and sell print-on-demand swag — every sale
-                funds your project&apos;s mission.
+                A self-provisioned local design &amp; print protocol that
+                generates{" "}
+                <strong className="text-foreground">revenue</strong> (and
+                attention!) for your community.
               </>
             )}
           </p>

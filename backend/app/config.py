@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     jwt_expire_hours: int = 24
 
     # Email (SMTP via Mailcow)
-    smtp_host: str = "mx.jeffemmett.com"
+    smtp_host: str = "mail.rmail.online"
     smtp_port: int = 587
     smtp_user: str = ""
     smtp_password: str = ""

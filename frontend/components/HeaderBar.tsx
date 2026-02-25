@@ -8,22 +8,19 @@ import { AuthButton } from '@/components/AuthButton';
 interface HeaderBarProps {
   name: string;
   logoUrl: string | null;
-  spaceId?: string;
 }
 
-export function HeaderBar({ name, logoUrl, spaceId = 'default' }: HeaderBarProps) {
+export function HeaderBar({ name, logoUrl }: HeaderBarProps) {
   return (
-    <header className="border-b sticky top-0 z-50 bg-background/90 backdrop-blur-sm">
+    <header className="border-b border-slate-800 sticky top-0 z-50 bg-background/90 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
         {/* Left: App switcher + Space switcher + Logo */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 min-w-0">
           <AppSwitcher current="swag" />
-          <div className="w-px h-5 bg-white/10 hidden sm:block" />
-          <SpaceSwitcher currentSpaceId={spaceId} />
-          <div className="w-px h-5 bg-white/10 hidden sm:block" />
+          <SpaceSwitcher />
           <Link
             href="/"
-            className="flex items-center gap-2 font-bold text-lg"
+            className="flex items-center gap-2 font-bold text-lg ml-1"
           >
             {logoUrl ? (
               <img src={logoUrl} alt="" className="h-7 w-7 rounded" />

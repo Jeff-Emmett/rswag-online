@@ -59,7 +59,7 @@ export default async function RootLayout({
       </head>
       <body className={GeistSans.className}>
         <div className="min-h-screen flex flex-col">
-          <HeaderBar name={name} logoUrl={logoUrl ?? null} spaceId={spaceId} />
+          <HeaderBar name={name} logoUrl={logoUrl ?? null} />
 
           {/* ── Main Content ────────────────────────────────── */}
           <main className="flex-1">{children}</main>

@@ -16,7 +16,9 @@ const MODULES: AppModule[] = [
   // Creating
   { id: 'space',    name: 'rSpace',    badge: 'rS',  color: 'bg-teal-300',    emoji: '🎨', description: 'Real-time collaborative canvas',               domain: 'rspace.online' },
   { id: 'notes',    name: 'rNotes',    badge: 'rN',  color: 'bg-amber-300',   emoji: '📝', description: 'Group note-taking & knowledge capture',        domain: 'rnotes.online' },
-  { id: 'pubs',     name: 'rPubs',     badge: 'rP',  color: 'bg-rose-300',    emoji: '📰', description: 'Collaborative publishing platform',              domain: 'rpubs.online' },
+  { id: 'pubs',     name: 'rPubs',     badge: 'rP',  color: 'bg-rose-300',    emoji: '📖', description: 'Collaborative publishing platform',              domain: 'rpubs.online' },
+  { id: 'tube',     name: 'rTube',     badge: 'rTu', color: 'bg-pink-300',    emoji: '🎬', description: 'Community video platform',                      domain: 'rtube.online' },
+  { id: 'swag',     name: 'rSwag',     badge: 'rSw', color: 'bg-red-200',     emoji: '👕', description: 'Community merch & swag store',                  domain: 'rswag.online' },
   // Planning
   { id: 'cal',      name: 'rCal',      badge: 'rC',  color: 'bg-sky-300',     emoji: '📅', description: 'Collaborative scheduling & events',             domain: 'rcal.online' },
   { id: 'trips',    name: 'rTrips',    badge: 'rT',  color: 'bg-emerald-300', emoji: '✈️', description: 'Group travel planning in real time',            domain: 'rtrips.online' },
@@ -27,25 +29,24 @@ const MODULES: AppModule[] = [
   { id: 'mail',     name: 'rMail',     badge: 'rMa', color: 'bg-blue-200',    emoji: '✉️', description: 'Community email & newsletters',                 domain: 'rmail.online' },
   { id: 'forum',    name: 'rForum',    badge: 'rFo', color: 'bg-amber-200',   emoji: '💭', description: 'Threaded community discussions',                domain: 'rforum.online' },
   // Deciding
-  { id: 'choices',  name: 'rChoices',  badge: 'rCo', color: 'bg-fuchsia-300', emoji: '🔀', description: 'Collaborative decision making',                 domain: 'rchoices.online' },
+  { id: 'choices',  name: 'rChoices',  badge: 'rCo', color: 'bg-fuchsia-300', emoji: '⚖️', description: 'Collaborative decision making',                 domain: 'rchoices.online' },
   { id: 'vote',     name: 'rVote',     badge: 'rV',  color: 'bg-violet-300',  emoji: '🗳️', description: 'Real-time polls & governance',                  domain: 'rvote.online' },
   // Funding & Commerce
   { id: 'funds',    name: 'rFunds',    badge: 'rF',  color: 'bg-lime-300',    emoji: '💸', description: 'Collaborative fundraising & grants',            domain: 'rfunds.online' },
   { id: 'wallet',   name: 'rWallet',   badge: 'rW',  color: 'bg-yellow-300',  emoji: '💰', description: 'Multi-chain crypto wallet',                      domain: 'rwallet.online' },
   { id: 'cart',     name: 'rCart',      badge: 'rCt', color: 'bg-orange-300',  emoji: '🛒', description: 'Group commerce & shared shopping',              domain: 'rcart.online' },
   { id: 'auctions', name: 'rAuctions', badge: 'rA',  color: 'bg-red-300',     emoji: '🔨', description: 'Live auction platform',                          domain: 'rauctions.online' },
-  { id: 'swag',     name: 'rSwag',     badge: 'rSw', color: 'bg-red-200',     emoji: '👕', description: 'Community merch & swag store',                  domain: 'rswag.online' },
-  // Social & Media
-  { id: 'photos',   name: 'rPhotos',   badge: 'rPh', color: 'bg-pink-200',    emoji: '📸', description: 'Shared community photo albums',                domain: 'rphotos.online' },
-  { id: 'tube',     name: 'rTube',     badge: 'rTu', color: 'bg-pink-300',    emoji: '🎬', description: 'Group video platform',                          domain: 'rtube.online' },
-  { id: 'network',  name: 'rNetwork',  badge: 'rNe', color: 'bg-blue-300',    emoji: '🌐', description: 'Community network & social graph',              domain: 'rnetwork.online' },
-  { id: 'socials',  name: 'rSocials',  badge: 'rSo', color: 'bg-sky-200',     emoji: '📢', description: 'Social media management',                      domain: 'rsocials.online' },
+  // Sharing
+  { id: 'photos',   name: 'rPhotos',   badge: 'rPh', color: 'bg-pink-200',    emoji: '📸', description: 'Community photo commons',                      domain: 'rphotos.online' },
+  { id: 'network',  name: 'rNetwork',  badge: 'rNe', color: 'bg-blue-300',    emoji: '🕸️', description: 'Community network & social graph',              domain: 'rnetwork.online' },
   { id: 'files',    name: 'rFiles',    badge: 'rFi', color: 'bg-cyan-300',    emoji: '📁', description: 'Collaborative file storage',                    domain: 'rfiles.online' },
+  { id: 'socials',  name: 'rSocials',  badge: 'rSo', color: 'bg-sky-200',     emoji: '📢', description: 'Social media management',                      domain: 'rsocials.online' },
+  // Observing
   { id: 'data',     name: 'rData',     badge: 'rD',  color: 'bg-purple-300',  emoji: '📊', description: 'Analytics & insights dashboard',                domain: 'rdata.online' },
   // Work & Productivity
-  { id: 'work',     name: 'rWork',     badge: 'rWo', color: 'bg-slate-300',   emoji: '💼', description: 'Project & task management',                     domain: 'rwork.online' },
+  { id: 'work',     name: 'rWork',     badge: 'rWo', color: 'bg-slate-300',   emoji: '📋', description: 'Project & task management',                     domain: 'rwork.online' },
   // Identity & Infrastructure
-  { id: 'ids',      name: 'rIDs',      badge: 'rId', color: 'bg-emerald-300', emoji: '🔑', description: 'Passkey identity & zero-knowledge auth',       domain: 'ridentity.online' },
+  { id: 'ids',      name: 'rIDs',      badge: 'rId', color: 'bg-emerald-300', emoji: '🔐', description: 'Passkey identity & zero-knowledge auth',       domain: 'ridentity.online' },
   { id: 'stack',    name: 'rStack',    badge: 'r*',  color: 'bg-gradient-to-br from-cyan-300 via-violet-300 to-rose-300', emoji: '📦', description: 'Open-source community infrastructure', domain: 'rstack.online' },
 ];
 
@@ -53,6 +54,8 @@ const MODULE_CATEGORIES: Record<string, string> = {
   space:    'Creating',
   notes:    'Creating',
   pubs:     'Creating',
+  tube:     'Creating',
+  swag:     'Creating',
   cal:      'Planning',
   trips:    'Planning',
   maps:     'Planning',
@@ -66,13 +69,11 @@ const MODULE_CATEGORIES: Record<string, string> = {
   wallet:   'Funding & Commerce',
   cart:     'Funding & Commerce',
   auctions: 'Funding & Commerce',
-  swag:     'Funding & Commerce',
-  photos:   'Social & Media',
-  tube:     'Social & Media',
-  network:  'Social & Media',
-  socials:  'Social & Media',
-  files:    'Social & Media',
-  data:     'Social & Media',
+  photos:   'Sharing',
+  network:  'Sharing',
+  files:    'Sharing',
+  socials:  'Sharing',
+  data:     'Observing',
   work:     'Work & Productivity',
   ids:      'Identity & Infrastructure',
   stack:    'Identity & Infrastructure',
@@ -84,7 +85,8 @@ const CATEGORY_ORDER = [
   'Communicating',
   'Deciding',
   'Funding & Commerce',
-  'Social & Media',
+  'Sharing',
+  'Observing',
   'Work & Productivity',
   'Identity & Infrastructure',
 ];

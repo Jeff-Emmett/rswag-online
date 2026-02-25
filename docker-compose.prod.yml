@@ -1,0 +1,22 @@
+services:
+  backend:
+    volumes:
+      - /opt/apps/rswag/designs:/app/designs
+      - /opt/apps/rswag/config:/app/config:ro
+      - /opt/apps/rswag/spaces:/app/spaces:ro
+    environment:
+      - DESIGNS_PATH=/app/designs
+      - CONFIG_PATH=/app/config
+      - SPACES_PATH=/app/spaces
+
+  frontend:
+    build:
+      args:
+        - NEXT_PUBLIC_API_URL=https://rswag.online/api
+
+networks:
+  rswag-internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.200.1.0/24

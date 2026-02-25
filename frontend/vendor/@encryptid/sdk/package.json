@@ -1,0 +1,129 @@
+{
+  "name": "@encryptid/sdk",
+  "version": "0.1.0",
+  "description": "Unified identity SDK for the r-ecosystem — WebAuthn passkeys, key derivation, session management, and social recovery",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./client": {
+      "import": "./client/index.js",
+      "types": "./client/index.d.ts"
+    },
+    "./server": {
+      "import": "./server/index.js",
+      "types": "./server/index.d.ts"
+    },
+    "./server/nextjs": {
+      "import": "./server/middleware/nextjs.js",
+      "types": "./server/middleware/nextjs.d.ts"
+    },
+    "./server/hono": {
+      "import": "./server/middleware/hono.js",
+      "types": "./server/middleware/hono.d.ts"
+    },
+    "./server/express": {
+      "import": "./server/middleware/express.js",
+      "types": "./server/middleware/express.d.ts"
+    },
+    "./server/space-auth": {
+      "import": "./server/space-auth.js",
+      "types": "./server/space-auth.d.ts"
+    },
+    "./server/ws-auth": {
+      "import": "./server/ws-auth.js",
+      "types": "./server/ws-auth.d.ts"
+    },
+    "./ui": {
+      "import": "./ui/index.js",
+      "types": "./ui/index.d.ts"
+    },
+    "./ui/react": {
+      "import": "./ui/react/index.js",
+      "types": "./ui/react/index.d.ts"
+    },
+    "./types": {
+      "import": "./types/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./types/roles": {
+      "import": "./types/roles.js",
+      "types": "./types/roles.d.ts"
+    },
+    "./types/module-permissions": {
+      "import": "./types/module-permissions.js",
+      "types": "./types/module-permissions.d.ts"
+    },
+    "./types/modules": {
+      "import": "./types/modules/index.js",
+      "types": "./types/modules/index.d.ts"
+    },
+    "./server/role-resolver": {
+      "import": "./server/role-resolver.js",
+      "types": "./server/role-resolver.d.ts"
+    },
+    "./types/membership-events": {
+      "import": "./types/membership-events.js",
+      "types": "./types/membership-events.d.ts"
+    },
+    "./client/token-relay": {
+      "import": "./client/token-relay.js",
+      "types": "./client/token-relay.d.ts"
+    },
+    "./browser": {
+      "import": "./encryptid.browser.js",
+      "default": "./encryptid.browser.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src/python",
+    "src/browser.ts"
+  ],
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist --target browser && tsc --emitDeclarationOnly",
+    "build:browser": "bun build ./src/browser.ts --outfile ./encryptid.browser.js --target browser --minify",
+    "build:node": "bun build ./src/server/index.ts --outdir ./server --target node",
+    "build:all": "bun run build && bun run build:browser",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@noble/curves": "^2.0.1",
+    "@noble/hashes": "^2.0.1",
+    "hono": "^4.11.0"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://gitea.jeffemmett.com/jeffemmett/encryptid-sdk"
+  },
+  "keywords": [
+    "webauthn",
+    "passkey",
+    "identity",
+    "encryption",
+    "self-sovereign",
+    "social-recovery"
+  ]
+}

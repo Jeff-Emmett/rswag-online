@@ -1,0 +1,31 @@
+name: "Don't Abuse the Holes!"
+slug: defectfi-dont-abuse-holes
+description: "Defensive bug hunting meets punk resistance. Distressed typography with beetles crawling through the design — because the best defense is finding the vulnerabilities before they find you. Revenue from this design supports the DefectFi community. #DefectFi"
+tags: [defectfi, whistleblower, bug-bounty, punk, resistance, tee, community]
+space: all
+category: shirts
+created: "2026-02-24"
+author: defectfi
+
+source:
+  file: dont-abuse-the-holes.png
+  format: png
+  dimensions:
+    width: 1743
+    height: 1786
+  dpi: 300
+  color_profile: sRGB
+
+products:
+  - type: shirt
+    provider: printful
+    sku: "71"
+    variants: [S, M, L, XL, 2XL, 3XL]
+    retail_price: 29.99
+  - type: hoodie
+    provider: printful
+    sku: "146"
+    variants: [S, M, L, XL, 2XL]
+    retail_price: 49.99
+
+status: active

@@ -1,0 +1,36 @@
+id: default
+name: "rSwag"
+tagline: "Community Merch, On Demand"
+description: "Your community's merch shop — designed locally, printed on demand. Revenue flows directly back to your community."
+domain: "rswag.online"
+footer_text: "rSpace. Infrastructure for the commons."
+
+theme:
+  primary: "195 80% 50%"
+  primary_foreground: "0 0% 100%"
+  secondary: "45 80% 55%"
+  secondary_foreground: "180 10% 96%"
+  background: "222 30% 6%"
+  foreground: "180 10% 96%"
+  card: "222 25% 8%"
+  card_foreground: "180 10% 96%"
+  popover: "222 25% 8%"
+  popover_foreground: "180 10% 96%"
+  muted: "222 20% 14%"
+  muted_foreground: "215 20% 65%"
+  accent: "222 20% 14%"
+  accent_foreground: "180 10% 96%"
+  destructive: "0 62.8% 30.6%"
+  destructive_foreground: "210 40% 98%"
+  border: "222 20% 16%"
+  input: "222 20% 16%"
+  ring: "195 80% 50%"
+
+design_filter: "all"
+logo_url: null
+
+design_tips:
+  - "Be specific about text you want included"
+  - "Mention colors, mood, and style preferences"
+  - "rSpace themes work great: spatial webs, nodes, commons"
+  - "Generated designs start as drafts — preview before adding to the store"

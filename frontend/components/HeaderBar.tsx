@@ -2,20 +2,24 @@
 
 import Link from 'next/link';
 import { AppSwitcher } from '@/components/AppSwitcher';
+import { SpaceSwitcher } from '@/components/SpaceSwitcher';
 import { AuthButton } from '@/components/AuthButton';
 
 interface HeaderBarProps {
   name: string;
   logoUrl: string | null;
+  spaceId?: string;
 }
 
-export function HeaderBar({ name, logoUrl }: HeaderBarProps) {
+export function HeaderBar({ name, logoUrl, spaceId = 'default' }: HeaderBarProps) {
   return (
     <header className="border-b sticky top-0 z-50 bg-background/90 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
-        {/* Left: App switcher + Logo */}
-        <div className="flex items-center gap-3">
+        {/* Left: App switcher + Space switcher + Logo */}
+        <div className="flex items-center gap-2">
           <AppSwitcher current="swag" />
+          <div className="w-px h-5 bg-white/10 hidden sm:block" />
+          <SpaceSwitcher currentSpaceId={spaceId} />
           <div className="w-px h-5 bg-white/10 hidden sm:block" />
           <Link
             href="/"

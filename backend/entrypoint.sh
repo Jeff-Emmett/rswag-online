@@ -62,9 +62,8 @@ else
   echo "[infisical] Starting with existing env vars"
 fi
 
-# Fetch SMTP password from claude-ops /mail if not already set
-if [ -z "$SMTP_PASSWORD" ]; then
-  SMTP_PWD=$(python3 -c "
+# Fetch SMTP config from claude-ops /mail (authoritative source for rSwag email)
+SMTP_OVERRIDES=$(python3 -c "
 import urllib.request, json, os, sys
 base = os.environ.get('INFISICAL_URL', 'http://infisical:8080')
 try:
@@ -74,17 +73,18 @@ try:
     req = urllib.request.Request(f'{base}/api/v3/secrets/raw?workspaceSlug=claude-ops&environment=prod&secretPath=/mail')
     req.add_header('Authorization', f'Bearer {token}')
     secrets = json.loads(urllib.request.urlopen(req).read())
+    mapping = {'RSWAG_SMTP_HOST': 'SMTP_HOST', 'RSWAG_SMTP_USER': 'SMTP_USER', 'RSWAG_SMTP_PASSWORD': 'SMTP_PASSWORD'}
     for s in secrets.get('secrets',[]):
-        if s['secretKey'] == 'RSWAG_SMTP_PASSWORD':
-            print(s['secretValue'])
-            break
+        env_key = mapping.get(s['secretKey'])
+        if env_key:
+            val = s['secretValue'].replace(\"'\", \"'\\\\'\")
+            print(f\"export {env_key}='{val}'\")
 except Exception as e:
-    print(f'[smtp] Could not fetch password: {e}', file=sys.stderr)
+    print(f'[smtp] Could not fetch from claude-ops: {e}', file=sys.stderr)
 " 2>&1) || true
-  if [ -n "$SMTP_PWD" ] && echo "$SMTP_PWD" | grep -qv '^\['; then
-    export SMTP_PASSWORD="$SMTP_PWD"
-    echo "[infisical] Fetched SMTP password from claude-ops/mail"
-  fi
+if echo "$SMTP_OVERRIDES" | grep -q "^export "; then
+  eval "$SMTP_OVERRIDES"
+  echo "[infisical] Loaded SMTP config from claude-ops/mail"
 fi
 
 exec "$@"

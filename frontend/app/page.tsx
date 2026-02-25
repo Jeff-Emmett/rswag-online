@@ -80,11 +80,15 @@ export default async function HomePage() {
               name
             ) : (
               <>
-                Get Your Community Noticed
+                Get Your Community{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300">
+                  Noticed
+                </span>
                 <br />
                 with{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                  (you)rMerch
+                <span className="text-white">(you)</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-amber-300">
+                  rMerch
                 </span>
               </>
             )}

@@ -81,13 +81,13 @@ export default async function HomePage() {
             ) : (
               <>
                 Get Your Community{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                   Noticed
                 </span>
                 <br />
                 with{" "}
                 <span className="text-white">(you)</span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-amber-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                   rMerch
                 </span>
               </>

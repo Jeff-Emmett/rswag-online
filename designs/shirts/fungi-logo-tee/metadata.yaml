@@ -1,8 +1,8 @@
 name: "Fungi Flows Logo Tee"
 slug: fungi-logo-tee
-description: "The original Fungi Flows logo on a premium tee. Gold and bioluminescent green on deep purple — rep the mycelium movement."
-tags: [fungiflows, mushroom, logo, hip-hop, pittsburgh, tee]
-space: fungiflows
+description: "The original Fungi Flows logo on a premium tee. Gold and bioluminescent green on deep purple — rep the mycelium movement. Revenue supports the Fungi Flows community."
+tags: [fungiflows, mushroom, logo, hip-hop, pittsburgh, tee, community]
+space: all
 category: shirts
 created: "2026-02-18"
 author: fungi-flows
@@ -22,5 +22,10 @@ products:
     sku: "71"
     variants: [S, M, L, XL, 2XL]
     retail_price: 29.99
+  - type: hoodie
+    provider: printful
+    sku: "146"
+    variants: [S, M, L, XL, 2XL]
+    retail_price: 49.99
 
 status: active

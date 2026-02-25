@@ -303,7 +303,7 @@ export default function UploadPage() {
               </div>
 
               {error && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
+                <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-md text-red-400">
                   {error}
                 </div>
               )}
@@ -354,7 +354,7 @@ export default function UploadPage() {
                     <span
                       className={
                         uploadedDesign.status === "active"
-                          ? "text-green-600"
+                          ? "text-emerald-400"
                           : "text-yellow-600"
                       }
                     >
@@ -375,7 +375,7 @@ export default function UploadPage() {
                       </button>
                       <button
                         onClick={handleDelete}
-                        className="px-4 py-2 border border-red-300 text-red-600 rounded-md font-medium hover:bg-red-50 transition-colors"
+                        className="px-4 py-2 border border-red-500/30 text-red-400 rounded-md font-medium hover:bg-red-500/10 transition-colors"
                       >
                         Discard
                       </button>

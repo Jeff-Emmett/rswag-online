@@ -5,6 +5,8 @@ import Link from "next/link";
 import "./globals.css";
 import type { SpaceConfig } from "@/lib/spaces";
 import { themeToCSS } from "@/lib/spaces";
+import { AppSwitcher } from "@/components/AppSwitcher";
+import { SpaceSwitcher } from "@/components/SpaceSwitcher";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
@@ -80,46 +82,57 @@ export default async function RootLayout({
         <div className="min-h-screen flex flex-col">
           {/* ── Sticky Nav ──────────────────────────────────── */}
           <header className="border-b sticky top-0 z-50 bg-background/90 backdrop-blur-sm">
-            <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-              <Link
-                href="/"
-                className="flex items-center gap-2 font-bold text-lg"
-              >
-                {logoUrl ? (
-                  <img src={logoUrl} alt="" className="h-8 w-8 rounded" />
-                ) : (
-                  <div className="h-8 w-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-primary-foreground text-sm font-bold">
-                    rS
-                  </div>
-                )}
-                <span>
-                  <span className="text-primary">r</span>
-                  {name === "rSwag" ? "Swag" : name}
-                </span>
-              </Link>
+            <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+              {/* Left: App switcher + Logo */}
+              <div className="flex items-center gap-3">
+                <AppSwitcher current="swag" />
+                <div className="w-px h-5 bg-white/10 hidden sm:block" />
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 font-bold text-lg"
+                >
+                  {logoUrl ? (
+                    <img src={logoUrl} alt="" className="h-7 w-7 rounded" />
+                  ) : (
+                    <div className="h-7 w-7 bg-gradient-to-br from-cyan-300 to-amber-300 rounded-lg flex items-center justify-center text-slate-900 text-[10px] font-black leading-none">
+                      rSw
+                    </div>
+                  )}
+                  <span className="hidden sm:inline">
+                    <span className="text-primary">r</span>
+                    {name === "rSwag" ? "Swag" : name}
+                  </span>
+                </Link>
+              </div>
 
-              <nav className="flex items-center gap-1 sm:gap-4">
+              {/* Center: Nav links */}
+              <nav className="flex items-center gap-1 sm:gap-2">
                 <Link
                   href="/design"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 hidden sm:inline-flex"
+                  className="text-sm text-slate-300 hover:text-white transition-colors px-2.5 py-1.5 rounded-md hover:bg-white/[0.06] hidden sm:inline-flex"
                 >
                   Design
                 </Link>
                 <Link
                   href="/upload"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5"
+                  className="text-sm text-slate-300 hover:text-white transition-colors px-2.5 py-1.5 rounded-md hover:bg-white/[0.06]"
                 >
                   Upload
                 </Link>
                 <Link
                   href="/products"
-                  className="text-sm px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  className="text-sm px-4 py-1.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
                 >
                   Shop
                 </Link>
+              </nav>
+
+              {/* Right: Space switcher + Cart */}
+              <div className="flex items-center gap-2">
+                <SpaceSwitcher />
                 <Link
                   href="/cart"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5"
+                  className="text-slate-300 hover:text-white transition-colors p-2 rounded-md hover:bg-white/[0.06]"
                 >
                   <svg
                     className="h-5 w-5"
@@ -135,7 +148,7 @@ export default async function RootLayout({
                     />
                   </svg>
                 </Link>
-              </nav>
+              </div>
             </div>
           </header>
 

@@ -152,22 +152,30 @@ async def _get_printful_mockup(slug: str, product) -> bytes | None:
         variant_ids = [variants[0]["id"]]
 
         # Public image URL for Printful to download
-        image_url = f"https://fungiswag.jeffemmett.com/api/designs/{slug}/image"
+        image_url = f"{settings.public_url}/api/designs/{slug}/image"
 
         # Generate mockup (blocks up to ~60s on first call)
         mockups = await printful.generate_mockup_and_wait(
             product_id=product_id,
             variant_ids=variant_ids,
             image_url=image_url,
+            placement="front",
+            technique="dtg",
         )
 
         if not mockups:
             return None
 
-        # Find a mockup URL from the result
+        # v2 response: catalog_variant_mockups → each has mockup_url or
+        # placements[].mockup_url. Also check legacy "url" field.
         mockup_url = None
         for m in mockups:
             mockup_url = m.get("mockup_url") or m.get("url")
+            if not mockup_url and "placements" in m:
+                for p in m["placements"]:
+                    mockup_url = p.get("mockup_url") or p.get("url")
+                    if mockup_url:
+                        break
             if mockup_url:
                 break
 

@@ -51,6 +51,7 @@ class Settings(BaseSettings):
 
     # App
     app_name: str = "rSwag"
+    public_url: str = "https://rswag.online"
     debug: bool = False
 
     @property

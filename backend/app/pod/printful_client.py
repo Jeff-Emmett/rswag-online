@@ -98,22 +98,37 @@ class PrintfulClient:
         product_id: int,
         variant_ids: list[int],
         image_url: str,
-        placement: str = "front_large",
+        placement: str = "front",
+        technique: str = "dtg",
     ) -> str:
-        """Start async mockup generation task.
+        """Start async mockup generation task (v2 format).
 
         Returns task_id to poll with get_mockup_task().
+
+        v2 payload uses products array with catalog source, and layers
+        inside placements instead of flat image_url.
         """
         payload = {
-            "product_id": product_id,
-            "variant_ids": variant_ids,
-            "format": "png",
-            "placements": [
+            "products": [
                 {
-                    "placement": placement,
-                    "image_url": image_url,
+                    "source": "catalog",
+                    "catalog_product_id": product_id,
+                    "catalog_variant_ids": variant_ids,
+                    "placements": [
+                        {
+                            "placement": placement,
+                            "technique": technique,
+                            "layers": [
+                                {
+                                    "type": "file",
+                                    "url": image_url,
+                                }
+                            ],
+                        }
+                    ],
                 }
             ],
+            "format": "png",
         }
 
         async with httpx.AsyncClient(timeout=30.0) as client:
@@ -124,21 +139,20 @@ class PrintfulClient:
             )
             resp.raise_for_status()
             data = resp.json().get("data", {})
-            task_id = data.get("task_key") or data.get("id") or data.get("task_id")
+            task_id = data.get("id") or data.get("task_key") or data.get("task_id")
             logger.info(f"Printful mockup task created: {task_id}")
             return str(task_id)
 
     async def get_mockup_task(self, task_id: str) -> dict:
-        """Poll mockup task status.
+        """Poll mockup task status (v2 format).
 
         Returns dict with "status" (pending/completed/failed) and
-        "mockups" list when completed.
+        "catalog_variant_mockups" list when completed.
         """
         async with httpx.AsyncClient(timeout=15.0) as client:
             resp = await client.get(
-                f"{BASE_URL}/mockup-tasks",
+                f"{BASE_URL}/mockup-tasks/{task_id}",
                 headers=self._headers,
-                params={"task_key": task_id},
             )
             resp.raise_for_status()
             return resp.json().get("data", {})
@@ -148,7 +162,8 @@ class PrintfulClient:
         product_id: int,
         variant_ids: list[int],
         image_url: str,
-        placement: str = "front_large",
+        placement: str = "front",
+        technique: str = "dtg",
         max_polls: int = 20,
         poll_interval: float = 3.0,
     ) -> list[dict] | None:
@@ -158,7 +173,7 @@ class PrintfulClient:
         or None on failure/timeout.
         """
         task_id = await self.create_mockup_task(
-            product_id, variant_ids, image_url, placement
+            product_id, variant_ids, image_url, placement, technique
         )
 
         for _ in range(max_polls):
@@ -193,7 +208,7 @@ class PrintfulClient:
                 - catalog_variant_id (int)
                 - quantity (int)
                 - image_url (str) — public URL to design
-                - placement (str, default "front_large")
+                - placement (str, default "front")
             recipient: dict with name, address1, city, state_code,
                        country_code, zip, email (optional)
         """
@@ -208,7 +223,7 @@ class PrintfulClient:
                 "quantity": item.get("quantity", 1),
                 "placements": [
                     {
-                        "placement": item.get("placement", "front_large"),
+                        "placement": item.get("placement", "front"),
                         "technique": "dtg",
                         "layers": [
                             {

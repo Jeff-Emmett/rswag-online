@@ -41,6 +41,14 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expire_hours: int = 24
 
+    # Email (SMTP via Mailcow)
+    smtp_host: str = "mx.jeffemmett.com"
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = "noreply@rswag.online"
+    smtp_from_name: str = "rSwag"
+
     # CORS
     cors_origins: str = "http://localhost:3000"
 

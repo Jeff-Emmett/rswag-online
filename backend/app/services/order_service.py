@@ -17,6 +17,7 @@ from app.services.flow_service import FlowService
 from app.pod.printful_client import PrintfulClient
 from app.pod.prodigi_client import ProdigiClient
 from app.services.design_service import DesignService
+from app.services.email_service import EmailService
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -157,7 +158,27 @@ class OrderService:
         # Submit to POD providers
         await self._submit_to_pod(order)
 
-        # TODO: Send confirmation email
+        # Send confirmation email (non-blocking — don't fail the order if email fails)
+        try:
+            email_service = EmailService()
+            await email_service.send_order_confirmation(
+                to_email=order.shipping_email or "",
+                to_name=order.shipping_name,
+                order_id=str(order.id),
+                items=[
+                    {
+                        "product_name": item.product_name,
+                        "variant": item.variant,
+                        "quantity": item.quantity,
+                        "unit_price": float(item.unit_price),
+                    }
+                    for item in order.items
+                ],
+                total=float(order.total),
+                currency=order.currency or "USD",
+            )
+        except Exception as e:
+            logger.error(f"Failed to send confirmation email for order {order.id}: {e}")
 
     async def update_pod_status(
         self,
@@ -181,6 +202,55 @@ class OrderService:
             )
         )
         await self.db.commit()
+
+        # Send shipping notification when items ship
+        if status in ("shipped", "in_transit") and tracking_number:
+            await self._send_shipping_email(
+                pod_provider=pod_provider,
+                pod_order_id=pod_order_id,
+                tracking_number=tracking_number,
+                tracking_url=tracking_url,
+            )
+
+    async def _send_shipping_email(
+        self,
+        pod_provider: str,
+        pod_order_id: str,
+        tracking_number: str | None,
+        tracking_url: str | None,
+    ):
+        """Send shipping notification for an order."""
+        try:
+            # Find the order via its items
+            result = await self.db.execute(
+                select(OrderItem)
+                .where(
+                    OrderItem.pod_provider == pod_provider,
+                    OrderItem.pod_order_id == pod_order_id,
+                )
+                .limit(1)
+            )
+            item = result.scalar_one_or_none()
+            if not item:
+                return
+
+            result = await self.db.execute(
+                select(Order).where(Order.id == item.order_id)
+            )
+            order = result.scalar_one_or_none()
+            if not order or not order.shipping_email:
+                return
+
+            email_service = EmailService()
+            await email_service.send_shipping_notification(
+                to_email=order.shipping_email,
+                to_name=order.shipping_name,
+                order_id=str(order.id),
+                tracking_number=tracking_number,
+                tracking_url=tracking_url,
+            )
+        except Exception as e:
+            logger.error(f"Failed to send shipping email: {e}")
 
     async def _submit_to_pod(self, order: Order):
         """Route order items to the correct POD provider for fulfillment.

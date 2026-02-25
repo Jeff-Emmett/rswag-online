@@ -69,6 +69,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.rswag-api.rule=(Host(`rswag.online`) || Host(`fungiswag.jeffemmett.com`) || HostRegexp(`{subdomain:[a-z0-9-]+}.rswag.online`)) && PathPrefix(`/api`)"
       - "traefik.http.routers.rswag-api.entrypoints=web"
+      - "traefik.http.routers.rswag-api.priority=130"
       - "traefik.http.services.rswag-api.loadbalancer.server.port=8000"
       - "traefik.docker.network=traefik-public"
 
@@ -92,6 +93,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.rswag-web.rule=Host(`rswag.online`) || Host(`fungiswag.jeffemmett.com`) || HostRegexp(`{subdomain:[a-z0-9-]+}.rswag.online`)"
       - "traefik.http.routers.rswag-web.entrypoints=web"
+      - "traefik.http.routers.rswag-web.priority=130"
       - "traefik.http.services.rswag-web.loadbalancer.server.port=3000"
       - "traefik.docker.network=traefik-public"
 

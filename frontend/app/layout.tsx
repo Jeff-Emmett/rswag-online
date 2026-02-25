@@ -100,12 +100,6 @@ export default async function RootLayout({
 
               <nav className="flex items-center gap-1 sm:gap-4">
                 <Link
-                  href="/products"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5"
-                >
-                  Shop
-                </Link>
-                <Link
                   href="/design"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 hidden sm:inline-flex"
                 >
@@ -113,9 +107,15 @@ export default async function RootLayout({
                 </Link>
                 <Link
                   href="/upload"
-                  className="text-sm px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5"
                 >
                   Upload
+                </Link>
+                <Link
+                  href="/products"
+                  className="text-sm px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Shop
                 </Link>
                 <Link
                   href="/cart"

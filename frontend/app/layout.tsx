@@ -83,9 +83,10 @@ export default async function RootLayout({
           {/* ── Sticky Nav ──────────────────────────────────── */}
           <header className="border-b sticky top-0 z-50 bg-background/90 backdrop-blur-sm">
             <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
-              {/* Left: App switcher + Logo */}
+              {/* Left: App switcher + Spaces + Logo */}
               <div className="flex items-center gap-3">
                 <AppSwitcher current="swag" />
+                <SpaceSwitcher />
                 <div className="w-px h-5 bg-white/10 hidden sm:block" />
                 <Link
                   href="/"
@@ -127,9 +128,8 @@ export default async function RootLayout({
                 </Link>
               </nav>
 
-              {/* Right: Space switcher + Cart */}
+              {/* Right: Cart */}
               <div className="flex items-center gap-2">
-                <SpaceSwitcher />
                 <Link
                   href="/cart"
                   className="text-slate-300 hover:text-white transition-colors p-2 rounded-md hover:bg-white/[0.06]"

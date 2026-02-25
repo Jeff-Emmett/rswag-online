@@ -166,16 +166,13 @@ async def _get_printful_mockup(slug: str, product) -> bytes | None:
         if not mockups:
             return None
 
-        # v2 response: catalog_variant_mockups → each has mockup_url or
-        # placements[].mockup_url. Also check legacy "url" field.
+        # v2 response: catalog_variant_mockups[] → .mockups[] → .mockup_url
         mockup_url = None
-        for m in mockups:
-            mockup_url = m.get("mockup_url") or m.get("url")
-            if not mockup_url and "placements" in m:
-                for p in m["placements"]:
-                    mockup_url = p.get("mockup_url") or p.get("url")
-                    if mockup_url:
-                        break
+        for variant_mockup in mockups:
+            for mockup in variant_mockup.get("mockups", []):
+                mockup_url = mockup.get("mockup_url") or mockup.get("url")
+                if mockup_url:
+                    break
             if mockup_url:
                 break
 

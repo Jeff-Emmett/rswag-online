@@ -138,7 +138,9 @@ class PrintfulClient:
                 json=payload,
             )
             resp.raise_for_status()
-            data = resp.json().get("data", {})
+            # v2 returns {"data": [{ ... }]} — data is a list
+            raw_data = resp.json().get("data", [])
+            data = raw_data[0] if isinstance(raw_data, list) and raw_data else raw_data
             task_id = data.get("id") or data.get("task_key") or data.get("task_id")
             logger.info(f"Printful mockup task created: {task_id}")
             return str(task_id)
@@ -151,11 +153,16 @@ class PrintfulClient:
         """
         async with httpx.AsyncClient(timeout=15.0) as client:
             resp = await client.get(
-                f"{BASE_URL}/mockup-tasks/{task_id}",
+                f"{BASE_URL}/mockup-tasks",
                 headers=self._headers,
+                params={"id": task_id},
             )
             resp.raise_for_status()
-            return resp.json().get("data", {})
+            # v2 returns {"data": [{ ... }]} — data is a list
+            raw_data = resp.json().get("data", [])
+            if isinstance(raw_data, list) and raw_data:
+                return raw_data[0]
+            return raw_data if isinstance(raw_data, dict) else {}
 
     async def generate_mockup_and_wait(
         self,

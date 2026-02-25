@@ -1,10 +1,10 @@
 ---
 id: TASK-5
 title: Add real Printful mockup API integration
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-02-18 19:51'
-updated_date: '2026-02-21 20:54'
+updated_date: '2026-02-25 07:28'
 labels: []
 dependencies: []
 priority: high
@@ -34,4 +34,6 @@ Blocking:
 - Select the store in the "Access" dropdown (not "Account (all stores)")
 
 Once new token is set, just update ~/.secrets/printful_api_token and Netcup .env, rebuild, done.
+
+Printful mockup API v2 integrated. Falls back to Pillow compositing with local templates. Old fungi designs removed, only defectfi-dont-abuse-holes remains.
 <!-- SECTION:NOTES:END -->

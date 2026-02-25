@@ -3,6 +3,7 @@
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -45,7 +46,7 @@ class Settings(BaseSettings):
     smtp_host: str = "mail.rmail.online"
     smtp_port: int = 587
     smtp_user: str = ""
-    smtp_password: str = ""
+    smtp_password: str = Field(default="", validation_alias=AliasChoices("smtp_password", "SMTP_PASSWORD", "SMTP_PASS"))
     smtp_from_email: str = "noreply@rswag.online"
     smtp_from_name: str = "rSwag"
 

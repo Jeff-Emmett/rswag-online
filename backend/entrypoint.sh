@@ -40,6 +40,10 @@ try:
     for s in secrets['secrets']:
         key = s['secretKey']
         val = s['secretValue'].replace(\"'\", \"'\\\\'\")
+        existing = os.environ.get(key, '')
+        if existing and existing != val:
+            print(f'[infisical] Keeping explicit env var for {key}', file=sys.stderr)
+            continue
         print(f\"export {key}='{val}'\")
 except Exception as e:
     print(f'[infisical] Error: {e}', file=sys.stderr)

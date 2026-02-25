@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import type { SpaceConfig } from "@/lib/spaces";
+import { RevenueFlowSankey } from "@/components/RevenueFlowSankey";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
@@ -248,107 +249,43 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Community Revenue Model ───────────────────────────── */}
+      {/* ── Community Revenue Model — Interactive Sankey ─────── */}
       <section className="py-16 bg-muted/30">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+          <div className="text-center mb-10">
+            <span className="inline-flex items-center rounded-full text-sm px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+              Revenue Model
+            </span>
+            <h2 className="mt-3 text-2xl sm:text-3xl font-bold">
               Merch That Funds Your Mission
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
               Every purchase feeds revenue directly into your community&apos;s
-              funding streams. No middlemen, no platform fees eating your margins.
+              funding streams. Drag the sliders to explore how the money flows.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Revenue Flow */}
-            <div className="border border-primary/20 rounded-xl p-6 bg-card">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shrink-0">
-                  <svg
-                    className="h-5 w-5 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
-                    />
-                  </svg>
-                </div>
-                <h3 className="font-bold text-lg">Direct Revenue Stream</h3>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                Set your own margins. Printful handles production at cost, and
-                the markup goes straight into your community&apos;s treasury, DAO,
-                or project fund.
-              </p>
-              <div className="bg-muted/50 rounded-lg p-4 text-sm space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Production cost</span>
-                  <span>$9.25</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Your price</span>
-                  <span>$29.99</span>
-                </div>
-                <div className="border-t border-border pt-2 flex justify-between font-bold text-primary">
-                  <span>Community revenue</span>
-                  <span>$20.74 per sale</span>
-                </div>
-              </div>
-            </div>
+          <div className="border border-primary/20 rounded-xl p-6 sm:p-8 bg-card">
+            <RevenueFlowSankey />
+          </div>
 
-            {/* Community Benefits */}
-            <div className="border border-primary/20 rounded-xl p-6 bg-card">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shrink-0">
-                  <svg
-                    className="h-5 w-5 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="font-bold text-lg">Built for Communities</h3>
-              </div>
-              <ul className="text-sm text-muted-foreground space-y-3">
-                <li className="flex items-start gap-2">
-                  <svg className="h-5 w-5 text-primary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span><strong className="text-foreground">Branded Spaces</strong> — each community gets their own storefront with custom theme, logo, and catalog</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <svg className="h-5 w-5 text-primary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span><strong className="text-foreground">Zero inventory risk</strong> — items printed on demand, no upfront costs for your community</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <svg className="h-5 w-5 text-primary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span><strong className="text-foreground">Revenue routing</strong> — connect to rFunds, DAOs, or any wallet to stream merch revenue directly into community funding</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <svg className="h-5 w-5 text-primary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span><strong className="text-foreground">Local production</strong> — Printful fulfills from the nearest center, reducing shipping distance and carbon footprint</span>
-                </li>
-              </ul>
+          {/* Key benefits row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+            <div className="text-center p-4 rounded-lg border border-primary/10 bg-card/50">
+              <div className="text-2xl font-bold text-primary">$0</div>
+              <div className="text-xs text-muted-foreground mt-1">Platform Fees</div>
+            </div>
+            <div className="text-center p-4 rounded-lg border border-primary/10 bg-card/50">
+              <div className="text-2xl font-bold text-emerald-400">100%</div>
+              <div className="text-xs text-muted-foreground mt-1">Margin to Community</div>
+            </div>
+            <div className="text-center p-4 rounded-lg border border-primary/10 bg-card/50">
+              <div className="text-2xl font-bold text-purple-400">You</div>
+              <div className="text-xs text-muted-foreground mt-1">Set the Splits</div>
+            </div>
+            <div className="text-center p-4 rounded-lg border border-primary/10 bg-card/50">
+              <div className="text-2xl font-bold text-blue-400">0</div>
+              <div className="text-xs text-muted-foreground mt-1">Inventory Risk</div>
             </div>
           </div>
         </div>

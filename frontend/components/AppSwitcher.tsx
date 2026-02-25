@@ -2,12 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 
-interface AppModule {
+export interface AppModule {
   id: string;
   name: string;
-  badge: string;
-  color: string;
-  emoji: string;
+  badge: string;       // favicon-style abbreviation: rS, rN, rP, etc.
+  color: string;       // Tailwind bg class for the pastel badge
+  emoji: string;       // function emoji shown right of title
   description: string;
   domain?: string;
 }
@@ -16,27 +16,37 @@ const MODULES: AppModule[] = [
   // Creating
   { id: 'space',    name: 'rSpace',    badge: 'rS',  color: 'bg-teal-300',    emoji: '🎨', description: 'Real-time collaborative canvas',               domain: 'rspace.online' },
   { id: 'notes',    name: 'rNotes',    badge: 'rN',  color: 'bg-amber-300',   emoji: '📝', description: 'Group note-taking & knowledge capture',        domain: 'rnotes.online' },
-  { id: 'pubs',     name: 'rPubs',     badge: 'rP',  color: 'bg-rose-300',    emoji: '📰', description: 'Collaborative publishing platform',             domain: 'rpubs.online' },
+  { id: 'pubs',     name: 'rPubs',     badge: 'rP',  color: 'bg-rose-300',    emoji: '📰', description: 'Collaborative publishing platform',              domain: 'rpubs.online' },
   // Planning
   { id: 'cal',      name: 'rCal',      badge: 'rC',  color: 'bg-sky-300',     emoji: '📅', description: 'Collaborative scheduling & events',             domain: 'rcal.online' },
   { id: 'trips',    name: 'rTrips',    badge: 'rT',  color: 'bg-emerald-300', emoji: '✈️', description: 'Group travel planning in real time',            domain: 'rtrips.online' },
   { id: 'maps',     name: 'rMaps',     badge: 'rM',  color: 'bg-green-300',   emoji: '🗺️', description: 'Collaborative real-time mapping',               domain: 'rmaps.online' },
-  // Discussing & Deciding
-  { id: 'inbox',    name: 'rInbox',    badge: 'rI',  color: 'bg-indigo-300',  emoji: '📬', description: 'Private group messaging',                       domain: 'rinbox.online' },
-  { id: 'choices',  name: 'rChoices',  badge: 'rCh', color: 'bg-fuchsia-300', emoji: '🔀', description: 'Collaborative decision making',                domain: 'rchoices.online' },
+  // Communicating
+  { id: 'chats',    name: 'rChats',    badge: 'rCh', color: 'bg-emerald-200', emoji: '💬', description: 'Real-time encrypted messaging',                domain: 'rchats.online' },
+  { id: 'inbox',    name: 'rInbox',    badge: 'rI',  color: 'bg-indigo-300',  emoji: '📬', description: 'Private group messaging',                        domain: 'rinbox.online' },
+  { id: 'mail',     name: 'rMail',     badge: 'rMa', color: 'bg-blue-200',    emoji: '✉️', description: 'Community email & newsletters',                 domain: 'rmail.online' },
+  { id: 'forum',    name: 'rForum',    badge: 'rFo', color: 'bg-amber-200',   emoji: '💭', description: 'Threaded community discussions',                domain: 'rforum.online' },
+  // Deciding
+  { id: 'choices',  name: 'rChoices',  badge: 'rCo', color: 'bg-fuchsia-300', emoji: '🔀', description: 'Collaborative decision making',                 domain: 'rchoices.online' },
   { id: 'vote',     name: 'rVote',     badge: 'rV',  color: 'bg-violet-300',  emoji: '🗳️', description: 'Real-time polls & governance',                  domain: 'rvote.online' },
   // Funding & Commerce
   { id: 'funds',    name: 'rFunds',    badge: 'rF',  color: 'bg-lime-300',    emoji: '💸', description: 'Collaborative fundraising & grants',            domain: 'rfunds.online' },
-  { id: 'wallet',   name: 'rWallet',   badge: 'rW',  color: 'bg-yellow-300',  emoji: '💰', description: 'Multi-chain crypto wallet',                     domain: 'rwallet.online' },
+  { id: 'wallet',   name: 'rWallet',   badge: 'rW',  color: 'bg-yellow-300',  emoji: '💰', description: 'Multi-chain crypto wallet',                      domain: 'rwallet.online' },
   { id: 'cart',     name: 'rCart',      badge: 'rCt', color: 'bg-orange-300',  emoji: '🛒', description: 'Group commerce & shared shopping',              domain: 'rcart.online' },
-  { id: 'swag',     name: 'rSwag',     badge: 'rSw', color: 'bg-cyan-300',    emoji: '👕', description: 'Community merch & print-on-demand',             domain: 'rswag.online' },
-  { id: 'auctions', name: 'rAuctions', badge: 'rA',  color: 'bg-red-300',     emoji: '🔨', description: 'Live auction platform',                         domain: 'rauctions.online' },
-  // Social & Sharing
-  { id: 'network',  name: 'rNetwork',  badge: 'rNe', color: 'bg-blue-300',    emoji: '🌐', description: 'Community network & social graph',              domain: 'rnetwork.online' },
-  { id: 'files',    name: 'rFiles',    badge: 'rFi', color: 'bg-cyan-300',    emoji: '📁', description: 'Collaborative file storage',                    domain: 'rfiles.online' },
+  { id: 'auctions', name: 'rAuctions', badge: 'rA',  color: 'bg-red-300',     emoji: '🔨', description: 'Live auction platform',                          domain: 'rauctions.online' },
+  { id: 'swag',     name: 'rSwag',     badge: 'rSw', color: 'bg-red-200',     emoji: '👕', description: 'Community merch & swag store',                  domain: 'rswag.online' },
+  // Social & Media
+  { id: 'photos',   name: 'rPhotos',   badge: 'rPh', color: 'bg-pink-200',    emoji: '📸', description: 'Shared community photo albums',                domain: 'rphotos.online' },
   { id: 'tube',     name: 'rTube',     badge: 'rTu', color: 'bg-pink-300',    emoji: '🎬', description: 'Group video platform',                          domain: 'rtube.online' },
+  { id: 'network',  name: 'rNetwork',  badge: 'rNe', color: 'bg-blue-300',    emoji: '🌐', description: 'Community network & social graph',              domain: 'rnetwork.online' },
+  { id: 'socials',  name: 'rSocials',  badge: 'rSo', color: 'bg-sky-200',     emoji: '📢', description: 'Social media management',                      domain: 'rsocials.online' },
+  { id: 'files',    name: 'rFiles',    badge: 'rFi', color: 'bg-cyan-300',    emoji: '📁', description: 'Collaborative file storage',                    domain: 'rfiles.online' },
   { id: 'data',     name: 'rData',     badge: 'rD',  color: 'bg-purple-300',  emoji: '📊', description: 'Analytics & insights dashboard',                domain: 'rdata.online' },
-  { id: 'work',     name: 'rWork',     badge: 'rWk', color: 'bg-slate-300',   emoji: '📋', description: 'Collective task management',                    domain: 'rwork.online' },
+  // Work & Productivity
+  { id: 'work',     name: 'rWork',     badge: 'rWo', color: 'bg-slate-300',   emoji: '💼', description: 'Project & task management',                     domain: 'rwork.online' },
+  // Identity & Infrastructure
+  { id: 'ids',      name: 'rIDs',      badge: 'rId', color: 'bg-emerald-300', emoji: '🔑', description: 'Passkey identity & zero-knowledge auth',       domain: 'ridentity.online' },
+  { id: 'stack',    name: 'rStack',    badge: 'r*',  color: 'bg-gradient-to-br from-cyan-300 via-violet-300 to-rose-300', emoji: '📦', description: 'Open-source community infrastructure', domain: 'rstack.online' },
 ];
 
 const MODULE_CATEGORIES: Record<string, string> = {
@@ -46,35 +56,56 @@ const MODULE_CATEGORIES: Record<string, string> = {
   cal:      'Planning',
   trips:    'Planning',
   maps:     'Planning',
-  inbox:    'Discussing & Deciding',
-  choices:  'Discussing & Deciding',
-  vote:     'Discussing & Deciding',
+  chats:    'Communicating',
+  inbox:    'Communicating',
+  mail:     'Communicating',
+  forum:    'Communicating',
+  choices:  'Deciding',
+  vote:     'Deciding',
   funds:    'Funding & Commerce',
   wallet:   'Funding & Commerce',
   cart:     'Funding & Commerce',
-  swag:     'Funding & Commerce',
   auctions: 'Funding & Commerce',
-  network:  'Social & Sharing',
-  files:    'Social & Sharing',
-  tube:     'Social & Sharing',
-  data:     'Social & Sharing',
-  work:     'Social & Sharing',
+  swag:     'Funding & Commerce',
+  photos:   'Social & Media',
+  tube:     'Social & Media',
+  network:  'Social & Media',
+  socials:  'Social & Media',
+  files:    'Social & Media',
+  data:     'Social & Media',
+  work:     'Work & Productivity',
+  ids:      'Identity & Infrastructure',
+  stack:    'Identity & Infrastructure',
 };
 
 const CATEGORY_ORDER = [
   'Creating',
   'Planning',
-  'Discussing & Deciding',
+  'Communicating',
+  'Deciding',
   'Funding & Commerce',
-  'Social & Sharing',
+  'Social & Media',
+  'Work & Productivity',
+  'Identity & Infrastructure',
 ];
+
+/** Build the URL for a module, using username subdomain if logged in */
+function getModuleUrl(m: AppModule, username: string | null): string {
+  if (!m.domain) return '#';
+  if (username) {
+    // Generate <username>.<domain> URL
+    return `https://${username}.${m.domain}`;
+  }
+  return `https://${m.domain}`;
+}
 
 interface AppSwitcherProps {
   current?: string;
 }
 
-export function AppSwitcher({ current = 'swag' }: AppSwitcherProps) {
+export function AppSwitcher({ current = 'notes' }: AppSwitcherProps) {
   const [open, setOpen] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -87,8 +118,21 @@ export function AppSwitcher({ current = 'swag' }: AppSwitcherProps) {
     return () => document.removeEventListener('click', handleClick);
   }, []);
 
+  // Fetch current user's username for subdomain links
+  useEffect(() => {
+    fetch('/api/me')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.authenticated && data.user?.username) {
+          setUsername(data.user.username);
+        }
+      })
+      .catch(() => { /* not logged in */ });
+  }, []);
+
   const currentMod = MODULES.find((m) => m.id === current);
 
+  // Group modules by category
   const groups = new Map<string, AppModule[]>();
   for (const m of MODULES) {
     const cat = MODULE_CATEGORIES[m.id] || 'Other';
@@ -98,6 +142,7 @@ export function AppSwitcher({ current = 'swag' }: AppSwitcherProps) {
 
   return (
     <div className="relative" ref={ref}>
+      {/* Trigger button */}
       <button
         onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
         className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-sm font-semibold bg-white/[0.08] hover:bg-white/[0.12] text-slate-200 transition-colors"
@@ -107,12 +152,14 @@ export function AppSwitcher({ current = 'swag' }: AppSwitcherProps) {
             {currentMod.badge}
           </span>
         )}
-        <span className="hidden sm:inline">{currentMod?.name || 'rStack'}</span>
+        <span>{currentMod?.name || 'rStack'}</span>
         <span className="text-[0.7em] opacity-60">&#9662;</span>
       </button>
 
+      {/* Dropdown */}
       {open && (
         <div className="absolute top-full left-0 mt-1.5 w-[300px] max-h-[70vh] overflow-y-auto rounded-xl bg-slate-800 border border-white/10 shadow-xl shadow-black/30 z-[200]">
+          {/* rStack header */}
           <div className="px-3.5 py-3 border-b border-white/[0.08] flex items-center gap-2.5">
             <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-300 via-violet-300 to-rose-300 flex items-center justify-center text-[11px] font-black text-slate-900 leading-none">
               r*
@@ -123,6 +170,7 @@ export function AppSwitcher({ current = 'swag' }: AppSwitcherProps) {
             </div>
           </div>
 
+          {/* Categories */}
           {CATEGORY_ORDER.map((cat) => {
             const items = groups.get(cat);
             if (!items || items.length === 0) return null;
@@ -139,13 +187,15 @@ export function AppSwitcher({ current = 'swag' }: AppSwitcherProps) {
                     } transition-colors`}
                   >
                     <a
-                      href={m.domain ? `https://${m.domain}` : '#'}
+                      href={getModuleUrl(m, username)}
                       className="flex items-center gap-2.5 flex-1 px-3.5 py-2 text-slate-200 no-underline min-w-0"
                       onClick={() => setOpen(false)}
                     >
+                      {/* Pastel favicon badge */}
                       <span className={`w-7 h-7 rounded-md ${m.color} flex items-center justify-center text-[10px] font-black text-slate-900 leading-none flex-shrink-0`}>
                         {m.badge}
                       </span>
+                      {/* Name + description */}
                       <div className="flex flex-col min-w-0 flex-1">
                         <div className="flex items-center gap-1.5">
                           <span className="text-sm font-semibold">{m.name}</span>
@@ -172,6 +222,7 @@ export function AppSwitcher({ current = 'swag' }: AppSwitcherProps) {
             );
           })}
 
+          {/* Footer */}
           <div className="px-3.5 py-2.5 border-t border-white/[0.08] text-center">
             <a
               href="https://rstack.online"

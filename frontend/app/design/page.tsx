@@ -54,8 +54,15 @@ export default function DesignPage() {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Failed to generate design");
+        let message = "Failed to generate design";
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch {
+          const text = await response.text();
+          message = text || `Server error (${response.status})`;
+        }
+        throw new Error(message);
       }
 
       const design = await response.json();
@@ -82,8 +89,15 @@ export default function DesignPage() {
       );
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Failed to activate design");
+        let message = "Failed to activate design";
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch {
+          const text = await response.text();
+          message = text || `Server error (${response.status})`;
+        }
+        throw new Error(message);
       }
 
       setGeneratedDesign({ ...generatedDesign, status: "active" });
@@ -106,8 +120,15 @@ export default function DesignPage() {
       );
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Failed to delete design");
+        let message = "Failed to delete design";
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch {
+          const text = await response.text();
+          message = text || `Server error (${response.status})`;
+        }
+        throw new Error(message);
       }
 
       setGeneratedDesign(null);

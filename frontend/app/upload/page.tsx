@@ -103,8 +103,15 @@ export default function UploadPage() {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Upload failed");
+        let message = "Upload failed";
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch {
+          const text = await response.text();
+          message = text || `Server error (${response.status})`;
+        }
+        throw new Error(message);
       }
 
       const design = await response.json();
@@ -127,8 +134,15 @@ export default function UploadPage() {
         { method: "POST" }
       );
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Failed to activate design");
+        let message = "Failed to activate design";
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch {
+          const text = await response.text();
+          message = text || `Server error (${response.status})`;
+        }
+        throw new Error(message);
       }
       setUploadedDesign({ ...uploadedDesign, status: "active" });
     } catch (err) {
@@ -146,8 +160,15 @@ export default function UploadPage() {
         { method: "DELETE" }
       );
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Failed to delete design");
+        let message = "Failed to delete design";
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch {
+          const text = await response.text();
+          message = text || `Server error (${response.status})`;
+        }
+        throw new Error(message);
       }
       resetForm();
     } catch (err) {

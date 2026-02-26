@@ -126,6 +126,8 @@ Square format, clean edges for die-cut sticker."""
             status_code=504,
             detail="AI generation timed out"
         )
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=502,

@@ -10,6 +10,7 @@ from app.schemas.cart import (
     CartItemResponse,
 )
 from app.schemas.order import OrderResponse, OrderItemResponse, OrderStatus
+from app.schemas.dither import DitherAlgorithm, DitherResponse, PaletteMode, ScreenPrintExport
 
 __all__ = [
     "Design",
@@ -25,4 +26,8 @@ __all__ = [
     "OrderResponse",
     "OrderItemResponse",
     "OrderStatus",
+    "DitherAlgorithm",
+    "DitherResponse",
+    "PaletteMode",
+    "ScreenPrintExport",
 ]

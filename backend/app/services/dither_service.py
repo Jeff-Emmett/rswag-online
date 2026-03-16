@@ -14,6 +14,9 @@ from app.schemas.dither import DitherAlgorithm, PaletteMode
 
 logger = logging.getLogger(__name__)
 
+# Max dimension for dithering input — keeps processing under Cloudflare timeout
+_MAX_DITHER_DIM = 1024
+
 # In-memory cache: sha256(slug+params) → (png_bytes, metadata)
 _MAX_CACHE = 200
 _dither_cache: OrderedDict[str, tuple[bytes, dict]] = OrderedDict()
@@ -30,6 +33,15 @@ def _cache_key(*parts) -> str:
 def _evict(cache: OrderedDict, max_size: int = _MAX_CACHE):
     while len(cache) > max_size:
         cache.popitem(last=False)
+
+
+def _downscale(image: Image.Image, max_dim: int = _MAX_DITHER_DIM) -> Image.Image:
+    """Downscale image if either dimension exceeds max_dim."""
+    if image.width <= max_dim and image.height <= max_dim:
+        return image
+    scale = max_dim / max(image.width, image.height)
+    new_size = (int(image.width * scale), int(image.height * scale))
+    return image.resize(new_size, Image.LANCZOS)
 
 
 def _hex_to_rgb(hex_str: str) -> tuple[int, int, int]:
@@ -163,7 +175,7 @@ def dither_design(
         meta["cached"] = True
         return png_bytes, meta
 
-    image = Image.open(image_path)
+    image = _downscale(Image.open(image_path))
     palette = build_palette(image, palette_mode, num_colors, custom_colors)
     dithered = apply_dither(image, palette, algorithm, threshold, order)
 
@@ -207,7 +219,7 @@ def generate_color_separations(
         _separation_cache.move_to_end(key)
         return _separation_cache[key]
 
-    image = Image.open(image_path)
+    image = _downscale(Image.open(image_path))
     palette = build_palette(image, palette_mode, num_colors, spot_colors)
     dithered = apply_dither(image, palette, algorithm)
 

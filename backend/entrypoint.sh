@@ -48,14 +48,16 @@ try:
 except Exception as e:
     print(f'[infisical] Error: {e}', file=sys.stderr)
     sys.exit(1)
-" 2>&1) || {
+") || {
   echo "[infisical] WARNING: Failed to fetch secrets, starting with existing env vars"
   exec "$@"
 }
 
 if echo "$EXPORTS" | grep -q "^export "; then
-  COUNT=$(echo "$EXPORTS" | grep -c "^export ")
-  eval "$EXPORTS"
+  # Only eval lines starting with "export" — skip any log messages
+  EXPORT_LINES=$(echo "$EXPORTS" | grep "^export ")
+  COUNT=$(echo "$EXPORT_LINES" | wc -l)
+  eval "$EXPORT_LINES"
   echo "[infisical] Injected ${COUNT} secrets"
 else
   echo "[infisical] WARNING: $EXPORTS"
@@ -81,9 +83,10 @@ try:
             print(f\"export {env_key}='{val}'\")
 except Exception as e:
     print(f'[smtp] Could not fetch from claude-ops: {e}', file=sys.stderr)
-" 2>&1) || true
+") || true
 if echo "$SMTP_OVERRIDES" | grep -q "^export "; then
-  eval "$SMTP_OVERRIDES"
+  SMTP_EXPORT_LINES=$(echo "$SMTP_OVERRIDES" | grep "^export ")
+  eval "$SMTP_EXPORT_LINES"
   echo "[infisical] Loaded SMTP config from claude-ops/mail"
 fi
 

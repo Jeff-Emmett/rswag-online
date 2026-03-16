@@ -15,7 +15,7 @@ from app.schemas.dither import DitherAlgorithm, PaletteMode
 logger = logging.getLogger(__name__)
 
 # Max dimension for dithering input — keeps processing under Cloudflare timeout
-_MAX_DITHER_DIM = 1024
+_MAX_DITHER_DIM = 512
 
 # In-memory cache: sha256(slug+params) → (png_bytes, metadata)
 _MAX_CACHE = 200

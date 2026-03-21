@@ -21,6 +21,7 @@ const MODULES: AppModule[] = [
   { id: 'swag',     name: 'rSwag',     badge: 'rSw', color: 'bg-red-200',     emoji: '👕', description: 'Community merch & swag store',                  domain: 'rswag.online' },
   // Planning
   { id: 'cal',      name: 'rCal',      badge: 'rC',  color: 'bg-sky-300',     emoji: '📅', description: 'Collaborative scheduling & events',             domain: 'rcal.online' },
+  { id: 'events',   name: 'rEvents',   badge: 'rEv', color: 'bg-violet-200',  emoji: '🎪', description: 'Event aggregation & discovery',                 domain: 'revents.online' },
   { id: 'trips',    name: 'rTrips',    badge: 'rT',  color: 'bg-emerald-300', emoji: '✈️', description: 'Group travel planning in real time',            domain: 'rtrips.online' },
   { id: 'maps',     name: 'rMaps',     badge: 'rM',  color: 'bg-green-300',   emoji: '🗺️', description: 'Collaborative real-time mapping',               domain: 'rmaps.online' },
   // Communicating
@@ -43,6 +44,8 @@ const MODULES: AppModule[] = [
   { id: 'socials',  name: 'rSocials',  badge: 'rSo', color: 'bg-sky-200',     emoji: '📢', description: 'Social media management',                      domain: 'rsocials.online' },
   // Observing
   { id: 'data',     name: 'rData',     badge: 'rD',  color: 'bg-purple-300',  emoji: '📊', description: 'Analytics & insights dashboard',                domain: 'rdata.online' },
+  // Learning
+  { id: 'books',    name: 'rBooks',    badge: 'rB',  color: 'bg-amber-200',   emoji: '📚', description: 'Collaborative library',                          domain: 'rbooks.online' },
   // Work & Productivity
   { id: 'work',     name: 'rWork',     badge: 'rWo', color: 'bg-slate-300',   emoji: '📋', description: 'Project & task management',                     domain: 'rwork.online' },
   // Identity & Infrastructure
@@ -57,6 +60,7 @@ const MODULE_CATEGORIES: Record<string, string> = {
   tube:     'Creating',
   swag:     'Creating',
   cal:      'Planning',
+  events:   'Planning',
   trips:    'Planning',
   maps:     'Planning',
   chats:    'Communicating',
@@ -74,6 +78,7 @@ const MODULE_CATEGORIES: Record<string, string> = {
   files:    'Sharing',
   socials:  'Sharing',
   data:     'Observing',
+  books:    'Learning',
   work:     'Work & Productivity',
   ids:      'Identity & Infrastructure',
   stack:    'Identity & Infrastructure',
@@ -87,9 +92,24 @@ const CATEGORY_ORDER = [
   'Funding & Commerce',
   'Sharing',
   'Observing',
+  'Learning',
   'Work & Productivity',
   'Identity & Infrastructure',
 ];
+
+/** Read the username from the EncryptID session in localStorage */
+function getSessionUsername(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const stored = localStorage.getItem('encryptid_session');
+    if (!stored) return null;
+    const parsed = JSON.parse(stored);
+    const claims = parsed?.claims || parsed;
+    return claims?.eid?.username || claims?.username || null;
+  } catch {
+    return null;
+  }
+}
 
 /** Build the URL for a module, using username subdomain if logged in */
 function getModuleUrl(m: AppModule, username: string | null): string {
@@ -120,16 +140,22 @@ export function AppSwitcher({ current = 'notes' }: AppSwitcherProps) {
     return () => document.removeEventListener('click', handleClick);
   }, []);
 
-  // Fetch current user's username for subdomain links
+  // Read username from EncryptID session in localStorage
   useEffect(() => {
-    fetch('/api/me')
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.authenticated && data.user?.username) {
-          setUsername(data.user.username);
-        }
-      })
-      .catch(() => { /* not logged in */ });
+    const sessionUsername = getSessionUsername();
+    if (sessionUsername) {
+      setUsername(sessionUsername);
+    } else {
+      // Fallback: check /api/me
+      fetch('/api/me')
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.authenticated && data.user?.username) {
+            setUsername(data.user.username);
+          }
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const currentMod = MODULES.find((m) => m.id === current);
